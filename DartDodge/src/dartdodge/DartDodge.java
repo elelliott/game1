@@ -14,7 +14,13 @@ public class DartDodge {
         return ball.lifeCount <= 0;
     }
 
-    public static boolean dartHitHuh(Balloon ball, Darts[] darts) {
+    public static boolean dartHitHuh(Balloon ball, DartsArray dartsArray) {
+        for (Darts e : dartsArray.darts) {
+            if ((e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
+                    && (e.ypos - 1 <= ball.ypos) && (ball.ypos <= e.ypos + 1)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -28,15 +34,19 @@ public class DartDodge {
 
         while (!gameOverHuh(balloon)) {
             cons.cls();
+            cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
             balloon.draw(cons);
             dartsArray.draw(cons);
-            dartsArray = dartsArray.tick();
             cons.refresh();
-            dartsArray = dartsArray.tick();
             balloon = balloon.react(cons.inkey());
             dartsArray = dartsArray.tick();
             balloon = balloon.tick();
+            if (dartHitHuh(balloon, dartsArray)) {
+                balloon = balloon.loseLife();
+            }         
         }
+        cons.refresh();
+        cons.print(WORLD_WIDTH/2-5, WORLD_HEIGHT/2, "GAME OVER", cons.BLUE);
     }
 
 }

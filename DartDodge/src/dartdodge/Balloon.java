@@ -21,6 +21,11 @@ public class Balloon {
         this.lifeCount = lives;
     }
     
+    public Balloon loseLife() {
+        return new Balloon(this.xpos, this.ypos, 
+                this.dx, this.dy, this.lifeCount - 1);
+    }
+    
     public void draw(ConsoleSystemInterface cons) {
         cons.print(this.xpos, this.ypos,     "  ____   ", cons.WHITE);
         cons.print(this.xpos, this.ypos + 1, " /    \\ ", cons.WHITE);
