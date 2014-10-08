@@ -23,6 +23,10 @@ public class DartDodge {
         }
         return false;
     }
+    
+    public static void printScore(DartsArray dartsArray, ConsoleSystemInterface cons) {
+        cons.print(1, 1, "Score: " + (15 * dartsArray.tickCount), cons.WHITE);
+    }
 
     public static void main(String[] args) throws InterruptedException {
         ConsoleSystemInterface cons = new WSwingConsoleInterface("Dart Dodge", true);
@@ -35,6 +39,7 @@ public class DartDodge {
         while (!gameOverHuh(balloon)) {
             cons.cls();
             cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
+            printScore(dartsArray, cons);
             balloon.draw(cons);
             dartsArray.draw(cons);
             cons.refresh();
