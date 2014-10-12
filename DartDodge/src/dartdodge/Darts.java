@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Darts {
 
     int xpos, ypos;
-    boolean isBubble = false;
 
     Darts() {
         this(0, (int) (Math.random() * (DartDodge.WORLD_HEIGHT + 1)));

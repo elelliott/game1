@@ -28,15 +28,6 @@ public class Balloon {
                 this.dx, this.dy, this.lifeCount - 1);
     }
 
-    public Balloon increaseLife() {
-        if (this.lifeCount < 3) {
-            return new Balloon(this.xpos, this.ypos,
-                    this.dx, this.dy, this.lifeCount + 1);
-        } else {
-            return this;
-        }
-    }
-
     public void draw(ConsoleSystemInterface cons) {
         cons.print(this.xpos, this.ypos, "  ____   ", cons.WHITE);
         cons.print(this.xpos, this.ypos + 1, " /    \\ ", cons.WHITE);

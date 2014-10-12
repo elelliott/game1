@@ -10,8 +10,9 @@ public class DartsArray {
         darts.add(new Darts());
     }
     
-    private DartsArray(ArrayList<Darts> darts) {
+    private DartsArray(ArrayList<Darts> darts, int tick) {
         this.darts = darts;
+        this.tickCount = tick;
     }
     
     public void draw(ConsoleSystemInterface cons) {
@@ -29,6 +30,6 @@ public class DartsArray {
         for (int i = 0; i < darts.size(); i++) {
             darts.set(i, darts.get(i).tick());
         }
-        return this;
+        return new DartsArray(this.darts, this.tickCount);
     }
 }
