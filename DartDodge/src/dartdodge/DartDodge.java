@@ -16,8 +16,20 @@ public class DartDodge {
 
     public static boolean dartHitHuh(Balloon ball, DartsArray dartsArray) {
         for (Darts e : dartsArray.darts) {
-            if ((e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
+            if (e.isBubble == false && 
+                    (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
                     && (e.ypos - 3 <= ball.ypos) && (ball.ypos <= e.ypos)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public static boolean bubbleHitHuh(Balloon ball, DartsArray dartsArray) {
+        for (Darts e : dartsArray.darts) {
+            if (e.isBubble == true && 
+                    (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 5)
+                    && (e.ypos - 4 <= ball.ypos) && (ball.ypos <= e.ypos + 1)) {
                 return true;
             }
         }
@@ -26,6 +38,16 @@ public class DartDodge {
     
     public static void printScore(DartsArray dartsArray, ConsoleSystemInterface cons) {
         cons.print(1, 1, "Score: " + (15 * dartsArray.tickCount), cons.WHITE);
+    }
+    
+    public static void tester(Object x, Object y) throws Exception {
+        if (x != y) {
+            throw new Exception("Oops! " + x + " does not equal " + y);
+        }
+    }
+    
+    public static void test() throws Exception {
+        // TESTERS HERE
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -43,12 +65,16 @@ public class DartDodge {
             balloon.draw(cons);
             dartsArray.draw(cons);
             cons.refresh();
-            balloon = balloon.react(cons.inkey());
+            CharKey ke = cons.inkey();
+            balloon = balloon.react(ke);
             dartsArray = dartsArray.tick();
             balloon = balloon.tick();
             if (dartHitHuh(balloon, dartsArray)) {
                 balloon = balloon.loseLife();
-            }         
+            }
+            if (bubbleHitHuh(balloon, dartsArray)) {
+                balloon = balloon.increaseLife();
+            }
         }
         cons.refresh();
         cons.print(WORLD_WIDTH/2-5, WORLD_HEIGHT/2, "GAME OVER", cons.BLUE);

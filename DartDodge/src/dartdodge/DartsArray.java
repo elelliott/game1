@@ -26,6 +26,10 @@ public class DartsArray {
         if (tickCount % 50 == 0) {
             this.darts.add(new Darts());
         }
+        
+        if (tickCount % 150 == 0) {
+            this.darts.add(new AirBubble());
+        }
 
         for (int i = 0; i < darts.size(); i++) {
             this.darts.set(i, darts.get(i).tick());
