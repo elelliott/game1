@@ -2,7 +2,7 @@ package dartdodge;
 import net.slashie.libjcsi.ConsoleSystemInterface;
 import java.util.ArrayList;
 
-public class AirBubble extends Darts {
+public class AirBubble {
     int xpos, ypos;
     boolean isBubble = true;
     
@@ -13,11 +13,7 @@ public class AirBubble extends Darts {
     private AirBubble(int xpos, int ypos) {
         this.xpos = xpos;
         this.ypos = ypos;
-    }
-    
-    public boolean isBubble() {
-        return true;
-    }
+    }    
     
     public void draw(ConsoleSystemInterface cons) {
         cons.print(this.xpos, this.ypos,     " xx ", cons.BLUE);

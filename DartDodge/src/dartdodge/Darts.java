@@ -16,10 +16,6 @@ public class Darts {
         this.xpos = xpos;
         this.ypos = ypos;
     }
-    
-    public boolean isBubble() {
-        return false;
-    }
 
     public void draw(ConsoleSystemInterface cons) {
         cons.print(this.xpos, this.ypos, "======>", cons.RED);

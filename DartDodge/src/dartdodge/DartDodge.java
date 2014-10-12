@@ -16,8 +16,7 @@ public class DartDodge {
 
     public static boolean dartHitHuh(Balloon ball, DartsArray dartsArray) {
         for (Darts e : dartsArray.darts) {
-            if (!e.isBubble() && 
-                    (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
+            if ((e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
                     && (e.ypos - 3 <= ball.ypos) && (ball.ypos <= e.ypos)) {
                 return true;
             }
@@ -25,10 +24,9 @@ public class DartDodge {
         return false;
     }
     
-    public static boolean bubbleHitHuh(Balloon ball, DartsArray dartsArray) {
-        for (Darts e : dartsArray.darts) {
-            if (e.isBubble() && 
-                    (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 5)
+    public static boolean bubbleHitHuh(Balloon ball, BubbleArray bubArray) {
+        for (AirBubble e : bubArray.bubbles) {
+            if ((e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 5)
                     && (e.ypos - 4 <= ball.ypos) && (ball.ypos <= e.ypos + 1)) {
                 return true;
             }
@@ -57,6 +55,7 @@ public class DartDodge {
 
         Balloon balloon = new Balloon();
         DartsArray dartsArray = new DartsArray();
+        BubbleArray bubbleArray = new BubbleArray();
 
         while (!gameOverHuh(balloon)) {
             cons.cls();
@@ -68,11 +67,12 @@ public class DartDodge {
             CharKey ke = cons.inkey();
             balloon = balloon.react(ke);
             dartsArray = dartsArray.tick();
+            bubbleArray = bubbleArray.tick();
             balloon = balloon.tick();
             if (dartHitHuh(balloon, dartsArray)) {
                 balloon = balloon.loseLife();
             }
-            if (bubbleHitHuh(balloon, dartsArray)) {
+            if (bubbleHitHuh(balloon, bubbleArray)) {
                 balloon = balloon.increaseLife();
             }
         }
