@@ -16,7 +16,7 @@ public class DartDodge {
 
     public static boolean dartHitHuh(Balloon ball, DartsArray dartsArray) {
         for (Darts e : dartsArray.darts) {
-            if (e.isBubble == false && 
+            if (!e.isBubble() && 
                     (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 7)
                     && (e.ypos - 3 <= ball.ypos) && (ball.ypos <= e.ypos)) {
                 return true;
@@ -27,7 +27,7 @@ public class DartDodge {
     
     public static boolean bubbleHitHuh(Balloon ball, DartsArray dartsArray) {
         for (Darts e : dartsArray.darts) {
-            if (e.isBubble == true && 
+            if (e.isBubble() && 
                     (e.xpos - 1 <= ball.xpos) && (ball.xpos <= e.xpos + 5)
                     && (e.ypos - 4 <= ball.ypos) && (ball.ypos <= e.ypos + 1)) {
                 return true;

@@ -15,6 +15,10 @@ public class AirBubble extends Darts {
         this.ypos = ypos;
     }
     
+    public boolean isBubble() {
+        return true;
+    }
+    
     public void draw(ConsoleSystemInterface cons) {
         cons.print(this.xpos, this.ypos,     " xx ", cons.BLUE);
         cons.print(this.xpos, this.ypos + 1, "x  x", cons.BLUE);
