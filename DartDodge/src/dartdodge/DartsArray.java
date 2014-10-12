@@ -10,9 +10,8 @@ public class DartsArray {
         darts.add(new Darts());
     }
     
-    private DartsArray(ArrayList<Darts> darts, int tick) {
+    private DartsArray(ArrayList<Darts> darts) {
         this.darts = darts;
-        this.tickCount = tick;
     }
     
     public void draw(ConsoleSystemInterface cons) {
@@ -22,14 +21,14 @@ public class DartsArray {
     }
     
     public DartsArray tick() {
-        this.tickCount++;
+        tickCount++;
         if (tickCount % 50 == 0) {
-            this.darts.add(new Darts());
+            darts.add(new Darts());
         }
         
         for (int i = 0; i < darts.size(); i++) {
-            this.darts.set(i, darts.get(i).tick());
+            darts.set(i, darts.get(i).tick());
         }
-        return new DartsArray(this.darts, this.tickCount);
+        return this;
     }
 }
