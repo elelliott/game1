@@ -25,26 +25,30 @@ public class DartDodge {
         return false;
     }
 
-    public static void printScore(DartsArray dartsArray, ConsoleSystemInterface cons) {
-        cons.print(1, 1, "Score: " + (15 * dartsArray.tickCount), cons.WHITE);
+    public static int getScore(DartsArray darts) {
+        return 15 * darts.tickCount;
     }
 
-    public static void tickTest(DartsArray darts) throws Exception {
-        int rand = (int) Math.random() * 100;
+    public static void printScore(DartsArray dartsArray, ConsoleSystemInterface cons) {
+        cons.print(1, 1, "Score: " + getScore(dartsArray), cons.WHITE);
+    }
+
+    public static void scoreTest(DartsArray darts) throws Exception {
+        int rand = (int) (Math.random() * 100) + 100;
+        System.out.println("Score Tests passed: " + rand);
         DartsArray dartsT = darts;
         for (int i = 0; i < rand; i++) {
-            dartsT = darts.tick();
+            dartsT = dartsT.tick();
         }
-        
-        for (int i = 0; i < darts.darts.size(); i++) {
-            if (dartsT.darts.get(i).xpos != darts.darts.get(i).xpos + rand) {
-                throw new Exception();
-            }
+
+        if (getScore(dartsT) != 15 * rand) {
+            throw new Exception();
         }
     }
-    
+
     public static void tickReactTest() throws Exception {
-        int rand = (int) Math.random() * 100;
+        int rand = (int) (Math.random() * 100) + 100;
+        System.out.println("Tick/React Tests passed: " + rand);
         Balloon ballL = new Balloon();
         Balloon ballR = new Balloon();
         ballL = ballL.react(new CharKey(CharKey.LARROW));
@@ -55,8 +59,8 @@ public class DartDodge {
         for (int i = 0; i < rand; i++) {
             ballR = ballR.tick();
         }
-        
-        if (!(ballL.xpos >= 0 && ballR.xpos <= WORLD_WIDTH - 8)) {
+
+        if (ballL.xpos < 0 || ballR.xpos > WORLD_WIDTH - 8) {
             throw new Exception();
         }
     }
@@ -64,13 +68,13 @@ public class DartDodge {
     public static void test() throws Exception {
         Balloon ball = new Balloon();
         DartsArray darts = new DartsArray();
-        // call tick x times on a darts array <=> xpos of each dart in array + 1
-        tickTest(darts);
+        // call tick x times on a darts array <=> score = 15 * x
+        scoreTest(darts);
         // call react(larrow) and tick x times --> ball.xpos >= 0 && 
         //     call react(rarrow) & tick x times --> ball.xpos <=  max width - 8 
         tickReactTest();
         // ball.lifeCount = 0 --> gameOverHuh = true
-        if (ball.lifeCount == 0 && gameOverHuh(ball)) {
+        if (ball.lifeCount == 0 && !gameOverHuh(ball)) {
             throw new Exception();
         }
         // ball.loseLife() <=> ball with lifeCount - 1
@@ -80,60 +84,74 @@ public class DartDodge {
         // 
     }
 
+    public static void runSim(Balloon balloon, DartsArray dartsArray,
+            ConsoleSystemInterface cons) throws InterruptedException {
+        while (!gameOverHuh(balloon)) {
+            cons.cls();
+            cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
+            printScore(dartsArray, cons);
+            balloon.draw(cons);
+            dartsArray.draw(cons);
+            cons.refresh();
+            CharKey ke;
+            switch ((int) (Math.random() * 4)) {
+                case 0:
+                    ke = new CharKey(CharKey.UARROW);
+                    break;
+                case 1:
+                    ke = new CharKey(CharKey.DARROW);
+                    break;
+                case 2:
+                    ke = new CharKey(CharKey.LARROW);
+                    break;
+                default:
+                    ke = new CharKey(CharKey.RARROW);
+            }
+            balloon = balloon.react(ke);
+            dartsArray = dartsArray.tick();
+            balloon = balloon.tick();
+            if (dartHitHuh(balloon, dartsArray)) {
+                balloon = balloon.loseLife();
+            }
+            TimeUnit.MILLISECONDS.sleep(16 * 4);
+        }
+        
+        cons.refresh();
+        cons.print(WORLD_WIDTH / 2 - 5, WORLD_HEIGHT / 2, "GAME OVER", cons.BLUE);
+        TimeUnit.SECONDS.sleep(5);
+        cons.refresh();
+    }
+
     public static void main(String[] args) throws InterruptedException, Exception {
-        String mode = "test";
         ConsoleSystemInterface cons = new WSwingConsoleInterface("Dart Dodge", true);
         cons.cls();
         cons.refresh();
 
         Balloon balloon = new Balloon();
         DartsArray dartsArray = new DartsArray();
-        
-        test();
 
-        if (mode.equals("test")) {
-            while (!gameOverHuh(balloon)) {
-                cons.cls();
-                cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
-                printScore(dartsArray, cons);
-                balloon.draw(cons);
-                dartsArray.draw(cons);
-                cons.refresh();
-                CharKey ke;
-                switch ((int) (Math.random() * 5)) {
-                    case 0: ke = new CharKey(CharKey.UARROW);
-                        break;
-                    case 1: ke = new CharKey(CharKey.DARROW);
-                        break;
-                    case 2: ke = new CharKey(CharKey.LARROW);
-                        break;
-                    default: ke = new CharKey(CharKey.RARROW);
-                }
-                balloon = balloon.react(ke);
-                dartsArray = dartsArray.tick();
-                balloon = balloon.tick();
-                if (dartHitHuh(balloon, dartsArray)) {
-                    balloon = balloon.loseLife();
-                }
-                TimeUnit.MILLISECONDS.sleep(16*4);
-            }
-        } else {
-            while (!gameOverHuh(balloon)) {
-                cons.cls();
-                cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
-                printScore(dartsArray, cons);
-                balloon.draw(cons);
-                dartsArray.draw(cons);
-                cons.refresh();
-                CharKey ke = cons.inkey();
-                balloon = balloon.react(ke);
-                dartsArray = dartsArray.tick();
-                balloon = balloon.tick();
-                if (dartHitHuh(balloon, dartsArray)) {
-                    balloon = balloon.loseLife();
-                }
+        // run tests
+        test();
+        // simulation
+        runSim(new Balloon(), new DartsArray(), cons);
+
+        // normal gameplay
+        while (!gameOverHuh(balloon)) {
+            cons.cls();
+            cons.print(1, 0, "Lives: " + balloon.lifeCount, cons.WHITE);
+            printScore(dartsArray, cons);
+            balloon.draw(cons);
+            dartsArray.draw(cons);
+            cons.refresh();
+            CharKey ke = cons.inkey();
+            balloon = balloon.react(ke);
+            dartsArray = dartsArray.tick();
+            balloon = balloon.tick();
+            if (dartHitHuh(balloon, dartsArray)) {
+                balloon = balloon.loseLife();
             }
         }
+
         cons.refresh();
         cons.print(WORLD_WIDTH / 2 - 5, WORLD_HEIGHT / 2, "GAME OVER", cons.BLUE);
     }
